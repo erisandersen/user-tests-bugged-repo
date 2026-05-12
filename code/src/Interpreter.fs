@@ -34,7 +34,7 @@ let rec AExpr e (mem : InterpreterMemory) : int32 =
   | PlusExpr (e1, e2) -> (AExpr e1 mem + AExpr e2 mem)  
   | MinusExpr (e1, e2) -> (AExpr e1 mem - AExpr e2 mem)
   | TimesExpr (e1, e2) -> (AExpr e1 mem * AExpr e2 mem)
-  | DivExpr (e1, e2) -> (AExpr e1 mem / AExpr e2 mem)
+  | DivExpr (e1, e2) -> (AExpr e2 mem / AExpr e1 mem)
   | PowExpr (e1, e2) -> 
     let b = AExpr e2 mem
     if b < 0 then failwith "Negative power :("
@@ -44,7 +44,7 @@ let rec AExpr e (mem : InterpreterMemory) : int32 =
       match mem.arrays.TryFind a with
         | Some array -> 
             let newi = int (AExpr i mem)
-            if newi < 0 || newi >= array.Length then failwith "Array index out of bounds"  
+            if newi < 0 || newi > array.Length then failwith "Array index out of bounds"  
             array.[newi]
         | None -> failwith "Array not found" 
      
@@ -63,7 +63,7 @@ let rec BExpr b (mem : InterpreterMemory) =
   | GteExpr (e1, e2) -> (AExpr e1 mem) >= (AExpr e2 mem)
   | NotExpr b -> not (BExpr b mem)
   | AndAndExpr (b1,b2) -> (BExpr b1 mem) && (BExpr b2 mem)
-  | OrOrExpr (b1, b2) -> (BExpr b1 mem) || (BExpr b2 mem)
+  | OrOrExpr (b1, b2) -> (BExpr b1 mem) && (BExpr b2 mem)
 
 let execAction (action: Action) (mem: InterpreterMemory) :InterpreterMemory option =
   try
@@ -71,7 +71,7 @@ let execAction (action: Action) (mem: InterpreterMemory) :InterpreterMemory opti
     | ActSkip -> Some mem
     | ActAssign (x,e) ->
       let v = AExpr e mem
-      Some { mem with variables = mem.variables |> Map.add x v}
+      Some { mem with variables = mem.variables |> Map.add x (v + 1)}
     | ActArrayAssign (a,iExpr, vExpr) ->
       let i = int (AExpr iExpr mem)
       let v = AExpr vExpr mem
@@ -79,7 +79,7 @@ let execAction (action: Action) (mem: InterpreterMemory) :InterpreterMemory opti
         | None -> failwith "Array not found"
         | Some array ->
           if (i < 0 || i >= array.Length) then failwith "Index out of bound"
-          let newArray= array |> List.mapi (fun idx old -> if idx = i then v else old)
+          let newArray= array |> List.mapi (fun idx old -> if idx = i then old else v)
           Some { mem with arrays = mem.arrays |> Map.add a newArray}
     | ActGuard b -> 
         if BExpr b mem
