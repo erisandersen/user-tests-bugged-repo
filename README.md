@@ -6,22 +6,38 @@ Clone this repository to your machine:
 
 ```
 git clone <repo-url>
-cd user-tests-bugged-repo
+cd user-tests-bugged-repo/code
 ```
 
-## Running the Program
+## Running the Tools
+
+This test uses **two versions** of Inspectify — an old generator and a new generator. Run both at the same time in separate terminals so you can compare them side by side.
+
+### New generator (opens at http://localhost:3000)
 
 **Windows (PowerShell):**
 ```powershell
-.\code\inspectify.ps1 --open
+.\inspectify.ps1 --open
 ```
 
-**macOS / Linux (Terminal):**
+**macOS / Linux:**
 ```bash
-./code/inspectify.sh --open
+./inspectify.sh --open
 ```
 
-The first run will automatically download the required binaries. After that, the tool will open in your browser.
+### Old generator (opens at http://localhost:9001)
+
+**Windows (PowerShell):**
+```powershell
+.\inspectify-old.ps1 --open
+```
+
+**macOS / Linux:**
+```bash
+./inspectify-old.sh --open
+```
+
+The first run of each script will automatically download the required binaries.
 
 ## What the Test Is About
 
@@ -30,9 +46,9 @@ This is a bug-finding study. The implementation you are working with contains **
 - **5 bugs in the Compiler**
 - **5 bugs in the Interpreter**
 
-Your task is to find as many of these bugs as you can using the **generator** built into the tool. The generator lets you create programs and observe how the compiler and interpreter handle them — use it to construct inputs that expose unexpected or incorrect behaviour.
+Your task is to find as many bugs as you can using both tools. Start with the **old generator**, spend around 7-8 minutes trying to find bugs, then switch to the **new generator** for another 7-8 minutes.
 
-There is no time limit on how deeply you explore, but we suggest spending 10-15 min on trying to find the bugs.
+Use the generator in each tool to produce test programs and observe how the compiler and interpreter handle them — look for unexpected or incorrect behaviour in the output graph or execution trace.
 
 ## Finishing the Test
 

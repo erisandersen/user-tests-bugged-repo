@@ -1,6 +1,7 @@
 bin/
 obj/
 .bins/
+.bins-old/
 
 Lexer.fs
 Lexer.fsi
