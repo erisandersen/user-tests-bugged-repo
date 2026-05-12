@@ -41,8 +41,8 @@ let rec printExpr e =
     match e with
     | Num n        -> string n
     | Var x        -> x
-    | PlusExpr (e1, e2) -> "(" + printExpr e1 + " + " + printExpr e2 + ")"
-    | MinusExpr (e1, e2) -> "(" + printExpr e1 + " - " + printExpr e2 + ")"
+    | PlusExpr (e1, e2) -> "(" + printExpr e1 + " - " + printExpr e2 + ")"
+    | MinusExpr (e1, e2) -> "(" + printExpr e1 + " + " + printExpr e2 + ")"
     | TimesExpr (e1, e2) -> "(" + printExpr e1 + " * " + printExpr e2 + ")"
     | DivExpr (e1, e2) -> "(" + printExpr e1 + " / " + printExpr e2 + ")"
     | PowExpr (e1, e2) -> "(" + printExpr e1 + " ^ " + printExpr e2 + ")"
@@ -62,8 +62,8 @@ let rec printBExpr b =
     | NeqExpr (e1, e2) -> "(" + printExpr e1 + " != " + printExpr e2 + ")"
     | GtExpr (e1, e2) -> "(" + printExpr e1 + " > " + printExpr e2 + ")"
     | GteExpr (e1, e2) -> "(" + printExpr e1 + " >= " + printExpr e2 + ")"
-    | LtExpr (e1, e2) -> "(" + printExpr e1 + " < " + printExpr e2 + ")"
-    | LteExpr (e1, e2) -> "(" + printExpr e1 + " <= " + printExpr e2 + ")"
+    | LtExpr (e1, e2) -> "(" + printExpr e1 + " <= " + printExpr e2 + ")"
+    | LteExpr (e1, e2) -> "(" + printExpr e1 + " < " + printExpr e2 + ")"
 
 let counter = ref 0
 
@@ -94,19 +94,16 @@ and edges c q1 q2 =
         [{ source=q1; label=CommandLabel(Assign(s,e)); target=q2 }]
 
     | ArrayAssign(s,e1,e2) ->
-        [{ source=q1; label=CommandLabel(ArrayAssign(s,e1,e2)); target=q2 }]
+        [{ source=q1; label=CommandLabel(ArrayAssign(s,e2,e1)); target=q2 }]
 
     | Sequence(c1,c2) ->
         let q = nextNode ()
-        edges c1 q1 q @ edges c2 q q2
+        edges c2 q1 q @ edges c1 q q2
 
     | If gcs ->
         edgesGC gcs q1 q2
 
     | Do gcs -> []
-        //let loopEdges = edgesGC gcs q1 q1
-        //let exitEdge = [{ source=q1; label=BoolExprLabel(doneCondition gcs); target=q2 }]
-        //loopEdges @ exitEdge
 
 let rec edgesGC_det gcs q1 q2 =
     let rec go gcs acc =
@@ -118,7 +115,7 @@ let rec edgesGC_det gcs q1 q2 =
             let branchEdges =
                 { source=q1; label=BoolExprLabel guardLabel; target=q }
                 :: edges_det c q q2
-            let newAcc = OrExpr(g, acc)
+            let newAcc = OrExpr(g,acc)
             let (restEdges, finalAcc) = go rest newAcc
             (branchEdges @ restEdges, finalAcc)
     go gcs False
@@ -132,20 +129,17 @@ and edges_det c q1 q2 =
         [{ source=q1; label=CommandLabel(Assign(s,e)); target=q2 }]
  
     | ArrayAssign(s,e1,e2) ->
-        [{ source=q1; label=CommandLabel(ArrayAssign(s,e1,e2)); target=q2 }]
+        [{ source=q1; label=CommandLabel(ArrayAssign(s,e2,e1)); target=q2 }]
  
     | Sequence(c1,c2) ->
         let q = nextNode ()
-        edges_det c1 q1 q @ edges_det c2 q q2
+        edges_det c2 q1 q @ edges_det c1 q q2
  
     | If gcs ->
         let (edgeList, _) = edgesGC_det gcs q1 q2
         edgeList
  
     | Do gcs -> []
-        //let (loopEdges, finalAcc) = edgesGC_det gcs q1 q1
-        //let exitEdge = [{ source=q1; label=BoolExprLabel(NotExpr finalAcc); target =q2}]
-        //loopEdges @ exitEdge
 
 let printL l =
     match l with
@@ -173,7 +167,7 @@ let analysis (input: Input) : Output =
         | Ok ast ->
             let edgeList =
                 match input.determinism with
-                | NonDeterministic -> edges     ast "q0" "qF"
+                | NonDeterministic -> edges_det     ast "q0" "qF"
                 | Deterministic    -> edges_det ast "q0" "qF"
             { dot = printDOT edgeList }
         | Error e -> { dot = "" }
