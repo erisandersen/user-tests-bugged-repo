@@ -32,7 +32,7 @@ This is a bug-finding study. The implementation you are working with contains **
 
 Your task is to find as many of these bugs as you can using the **generator** built into the tool. The generator lets you create programs and observe how the compiler and interpreter handle them — use it to construct inputs that expose unexpected or incorrect behaviour.
 
-There is no time limit on how deeply you explore, but try to be systematic. Note down each bug you find: where it is (Compiler or Interpreter) and what the incorrect behaviour is.
+There is no time limit on how deeply you explore, but we suggest spending 10-15 min on trying to find the bugs.
 
 ## Finishing the Test
 
