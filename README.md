@@ -1,5 +1,14 @@
 # Bug-Finding User Test
 
+## Prerequisites
+
+This project requires **.NET 9**. To verify you have the right version run `dotnet --version` - the version should be **9** or higher. Install it with one command for your platform:
+
+- **Windows:** `winget install Microsoft.DotNet.SDK.9`
+- **macOS:** `brew install dotnet-sdk`
+- **Linux (Debian/Ubuntu):** `sudo apt-get install -y dotnet-sdk-9.0`
+- **Linux (Fedora):** `sudo dnf install dotnet-sdk-9.0`
+
 ## Getting Started
 
 Clone this repository to your machine:
