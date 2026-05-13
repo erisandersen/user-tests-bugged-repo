@@ -22,6 +22,7 @@ This test uses **two versions** of Inspectify — an old generator and a new gen
 
 **macOS / Linux:**
 ```bash
+chmod +x inspectify.sh
 ./inspectify.sh --open
 ```
 
@@ -34,6 +35,7 @@ This test uses **two versions** of Inspectify — an old generator and a new gen
 
 **macOS / Linux:**
 ```bash
+chmod +x inspectify-old.sh
 ./inspectify-old.sh --open
 ```
 
