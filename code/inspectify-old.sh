@@ -14,16 +14,16 @@ if [[ "$(uname)" == "Darwin" ]]; then
     # MacOS
     ARCH=$(uname -m)
     if [[ "$ARCH" == "x86_64" ]]; then
-        ./.bins-old/inspectify-macos-x86_64 "--port 9001" "$@"
+        ./.bins-old/inspectify-macos-x86_64 --port 9001 "$@"
     elif [[ "$ARCH" == "arm64" ]]; then
-        ./.bins-old/inspectify-macos-arm64 "--port 9001" "$@"
+        ./.bins-old/inspectify-macos-arm64 --port 9001 "$@"
     else
         echo "Unsupported MacOS architecture"
         exit 1
     fi
 elif [[ "$(uname)" == "Linux" ]]; then
     # Linux
-    ./.bins-old/inspectify-linux "--port 9001" "$@"
+    ./.bins-old/inspectify-linux --port 9001 "$@"
 else
     echo "Unsupported operating system"
     exit 1
