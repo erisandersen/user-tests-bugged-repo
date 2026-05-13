@@ -3,12 +3,12 @@
 # set -e
 
 if [ -d ".bins" ]; then
-    # If the .bins directory exists, navigate into it and pull the latest changes
     (cd .bins && git pull)
 else
-    # If the .bins directory does not exist, clone the repository
     git clone --depth 1 https://github.com/erisandersen/inspectify-testing-binaries.git .bins
 fi
+
+chmod +x .bins/inspectify-*
 
 if [[ "$(uname)" == "Darwin" ]]; then
     # MacOS
